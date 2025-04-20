@@ -1,11 +1,10 @@
 services:
-  - type: web
+  - type: web_service
     name: kpi-windmonitor-backend
-    runtime: python
-    buildCommand: ""
+    env: python3
+    branch: main
+    region: oregon
+    # Render construira depuis backend/, pas la racine du repo
+    rootDirectory: backend
+    buildCommand: pip install -r requirements.txt
     startCommand: uvicorn main:app --host 0.0.0.0 --port 10000
-    envVars:
-      - key: PYTHON_VERSION
-        value: "3.10"
-    plan: free
-    region: frankfurt
