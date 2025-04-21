@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { auth } from "../firebase-config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import API_BASE_URL from "../config";
+
+const response = await fetch(`${API_BASE_URL}/upload`, {
+  method: "POST",
+  body: formData,
+});
+
 
 function Register() {
   const [email, setEmail] = useState("");

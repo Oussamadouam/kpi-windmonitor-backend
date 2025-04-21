@@ -4,6 +4,13 @@ import { auth } from './firebase-config';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import API_BASE_URL from "../config";
+
+const response = await fetch(`${API_BASE_URL}/upload`, {
+  method: "POST",
+  body: formData,
+});
+
 
 function App() {
   const [user, setUser] = useState(null);

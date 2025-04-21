@@ -2,6 +2,13 @@ import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase-config';
 import { useNavigate } from 'react-router-dom';
+import API_BASE_URL from "../config";
+
+const response = await fetch(`${API_BASE_URL}/upload`, {
+  method: "POST",
+  body: formData,
+});
+
 
 function Login() {
   const [email, setEmail] = useState('');
