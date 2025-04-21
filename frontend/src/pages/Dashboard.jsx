@@ -1,46 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from './firebase-config';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
-import API_BASE_URL from "../config";
+import React, { useEffect, useState } from 'react';
+import API_BASE_URL from '../../config';
 
-const response = await fetch(`${API_BASE_URL}/upload`, {
-  method: "POST",
-  body: formData,
-});
-
-
-function App() {
-  const [user, setUser] = useState(null);
-  const [isAuthorized, setIsAuthorized] = useState(false);
+function Dashboard() {
+  const [kpiData, setKpiData] = useState(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
-
-      if (currentUser) {
-        // Vérifier l'autorisation dans Firestore
-        try {
-          const res = await fetch(`http://localhost:8000/validate_user/${currentUser.uid}`);
-          const data = await res.json();
-          setIsAuthorized(data.allowed);
-        } catch (error) {
-          console.error('Erreur de validation utilisateur:', error);
-          setIsAuthorized(false);
-        }
-      } else {
-        setIsAuthorized(false);
-      }
-    });
-
-    return () => unsubscribe();
+    fetch(`${API_BASE_URL}/your-endpoint`)
+      .then(response => response.json())
+      .then(data => setKpiData(data))
+      .catch(error => console.error('Error fetching KPI:', error));
   }, []);
 
-  if (!user) return <Login />;
-  if (!isAuthorized) return <Register />;
-  return <Dashboard />;
+  return (
+    <div>
+      <h1>Dashboard</h1>
+      {kpiData ? (
+        <pre>{JSON.stringify(kpiData, null, 2)}</pre>
+      ) : (
+        <p>Loading...</p>
+      )}
+    </div>
+  );
 }
 
-export default App;
+export default Dashboard;

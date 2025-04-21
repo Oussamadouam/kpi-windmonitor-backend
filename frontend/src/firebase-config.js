@@ -1,11 +1,7 @@
+// src/firebase-config.js
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-// src/config.js
-const API_BASE_URL = "https://kpi-windmonitor-backend.onrender.com"; 
-
-export default API_BASE_URL;
-
 
 const firebaseConfig = {
   apiKey: 'TA_CLE_API',
@@ -17,5 +13,6 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
 export const auth = getAuth(app);
 export const db = getFirestore(app);

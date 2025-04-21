@@ -1,45 +1,40 @@
-import React, { useState, useEffect } from "react";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebase-config";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
-import API_BASE_URL from "../config";
-
-const response = await fetch(`${API_BASE_URL}/upload`, {
-  method: "POST",
-  body: formData,
-});
+import React, { useState, useEffect } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './firebase-config';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Dashboard from './pages/Dashboard';
+import { API_BASE_URL } from "./config";
 
 
 function App() {
   const [user, setUser] = useState(null);
-  const [authorized, setAuthorized] = useState(null);
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+
       if (currentUser) {
         try {
-          const response = await fetch(`http://localhost:8000/validate_user/${currentUser.uid}`);
-          const data = await response.json();
-          setAuthorized(data.allowed === true);
+          const res = await fetch(`${API_BASE_URL}/validate_user/${currentUser.uid}`);
+          const data = await res.json();
+          setIsAuthorized(data.allowed);
         } catch (error) {
-          console.error("Authorization check failed", error);
-          setAuthorized(false);
+          console.error('Erreur de validation utilisateur:', error);
+          setIsAuthorized(false);
         }
       } else {
-        setAuthorized(null);
+        setIsAuthorized(false);
       }
     });
 
     return () => unsubscribe();
   }, []);
 
-  if (user === null) return <Login />;
-  if (authorized === false) return <Register />;
-  if (authorized === true) return <Dashboard />;
-  return null;
+  if (!user) return <Login />;
+  if (!isAuthorized) return <Register />;
+  return <Dashboard />;
 }
 
 export default App;
